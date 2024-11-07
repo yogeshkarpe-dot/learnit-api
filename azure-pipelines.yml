@@ -17,7 +17,7 @@ steps:
 - task: UseDotNet@2
   inputs:
     packageType: 'sdk'
-    version: '8.x.x'  # Use the .NET 8 SDK version as needed
+    version: '8.x'  # Use the .NET 8 SDK version as needed
 
 - task: DotNetCoreCLI@2
   inputs:
