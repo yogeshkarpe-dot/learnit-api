@@ -1,0 +1,21 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+  branches:
+    include:
+      - main  # Sync only specific branches from Azure DevOps
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- checkout: self  # Check out the Azure DevOps repo
+
+- script: |
+    git remote add github https://github.com/yogeshkarpe-dot/LearnIT.git
+    git push github --mirror
+  displayName: 'Push changes from Azure DevOps to GitHub'
+
