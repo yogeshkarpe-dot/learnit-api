@@ -8,8 +8,7 @@ trigger:
     include:
       - main  # Sync only specific branches from Azure DevOps
 
-pool:
-  vmImage: 'ubuntu-latest'
+pool: SelfHostedAgent
 
 steps:
 - checkout: self  # Check out the Azure DevOps repo
