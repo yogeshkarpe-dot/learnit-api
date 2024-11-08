@@ -6,15 +6,38 @@
 trigger:
   branches:
     include:
-      - main  # Sync only specific branches from Azure DevOps
+      - main  # Or the branch you want to sync to GitHub
+
+resources:
+  repositories:
+    - repository: GitHubRepo
+      type: github
+      connection: 'github.com_yogeshkarpe-dot' # Name of the GitHub service connection in Azure DevOps
+      name: 'yogeshkarpe-dot/LearnIT' # Full name of the GitHub repository
 
 pool: SelfHostedAgent
 
 steps:
-- checkout: self  # Check out the Azure DevOps repo
+  - checkout: self
+    displayName: 'Checkout Azure DevOps repository'
 
-- script: |
-    git remote add github https://github.com/yogeshkarpe-dot/LearnIT.git
-    git push github --mirror
-  displayName: 'Push changes from Azure DevOps to GitHub'
+  - task: Bash@3
+    displayName: 'Pull latest changes from GitHub'
+    inputs:
+      targetType: 'inline'
+      script: |
+        git remote add github $(resources.repositories.GitHubRepo.url)
+        git pull github main  # Adjust branch as needed
+
+  - script: |
+      echo "Run any build, test, or modification steps here"
+    displayName: 'Build or Modify Code'
+
+  - task: Bash@3
+    displayName: 'Push changes to GitHub repository'
+    inputs:
+      targetType: 'inline'
+      script: |
+        git push github main  # Pushes changes from Azure DevOps to GitHub
+
 
