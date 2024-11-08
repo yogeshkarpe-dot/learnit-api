@@ -13,7 +13,7 @@ resources:
     - repository: GitHubRepo
       type: github
       endpoint: 'github.com_yogeshkarpe-dot' # Name of the GitHub service connection in Azure DevOps
-      name: 'yogeshkarpe-dot/LearnIT' # Full name of the GitHub repository
+      name: 'yogeshkarpe-dot/LearnIT' # Full GitHub repository name
 
 pool: SelfHostedAgent
 
@@ -22,11 +22,12 @@ steps:
     displayName: 'Checkout Azure DevOps repository'
 
   - task: Bash@3
-    displayName: 'Pull latest changes from GitHub'
+    displayName: 'Define GitHub remote URL and pull latest changes'
     inputs:
       targetType: 'inline'
       script: |
-        git remote add github $(resources.repositories.GitHubRepo.url)
+        GITHUB_URL=$(resources.repositories.GitHubRepo.url)
+        git remote add github $GITHUB_URL
         git pull github main  # Adjust branch as needed
 
   - script: |
@@ -39,5 +40,4 @@ steps:
       targetType: 'inline'
       script: |
         git push github main  # Pushes changes from Azure DevOps to GitHub
-
 
