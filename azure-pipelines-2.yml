@@ -12,7 +12,7 @@ resources:
   repositories:
     - repository: GitHubRepo
       type: github
-      connection: 'github.com_yogeshkarpe-dot' # Name of the GitHub service connection in Azure DevOps
+      endpoint: 'github.com_yogeshkarpe-dot' # Name of the GitHub service connection in Azure DevOps
       name: 'yogeshkarpe-dot/LearnIT' # Full name of the GitHub repository
 
 pool: SelfHostedAgent
