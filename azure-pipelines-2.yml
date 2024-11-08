@@ -14,7 +14,7 @@ steps:
 - checkout: self  # Check out the Azure DevOps repo
 
 - script: |
-    git remote add github https://github.com/yogeshkarpe-dot/LearnIT.git
-    git push github --mirror
+    git remote add origin https://github.com/yogeshkarpe-dot/LearnIT.git
+    git push git push --mirror origin
   displayName: 'Push changes from Azure DevOps to GitHub'
 
