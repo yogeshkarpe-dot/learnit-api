@@ -46,3 +46,13 @@ steps:
     PathtoPublish: '$(build.artifactStagingDirectory)'
     ArtifactName: 'drop'
     publishLocation: Container
+
+- task: CmdLine@2
+  inputs:
+    script: |
+      git clone https://github.com/yogeshkarpe-dot/LearnIT.git
+      git config --global user.name "Yogesh Karpe"
+      git checkout master
+      git add .
+      git commit -m "Automated push"
+      git push https://$(gitHubUsername):$(gitHubPat)@github.com/yogeshkarpe-dot/LearnIT.git 
