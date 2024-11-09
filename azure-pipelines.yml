@@ -55,7 +55,7 @@ steps:
       #please provide your username
       $alias = 'yogeshkarpe-dot:'+ "$(gitHubPat)"
       #Please make sure, you remove https from azure-repo-clone-url
-      $sourceURL = 'https://$(azureDevopsPat)@yogeshkarpe1410@dev.azure.com/yogeshkarpe1410/learnit/_git/learnit-api'
+      $sourceURL = 'https://$(azureDevopsPat)@dev.azure.com/yogeshkarpe1410/learnit/_git/learnit-api'
       #Please make sure, you remove https from github-repo-clone-url
       $destURL = 'https://' + $alias + '@github.com/yogeshkarpe-dot/learnit-api.git'
       #Check if the parent directory exists and delete
