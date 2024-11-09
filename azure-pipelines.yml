@@ -45,31 +45,55 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
+      Write-Host "Starting Git Push Process"
+
       if (-not (Test-Path .git)) {
+        Write-Host "Initializing Git repository..."
         git init
       }
 
+      # Check if the 'origin' remote already exists, add only if it doesn't
       $remotes = git remote
+      Write-Host "Checking remotes: $remotes"
       if (-not $remotes.Contains('origin')) {
+        Write-Host "Adding remote origin..."
         git remote add origin https://$(gitHubUsername):$(gitHubPat)@github.com/yogeshkarpe-dot/learnit-api.git
+      } else {
+        Write-Host "Remote 'origin' already exists."
       }
 
+      # Fetch the latest state from the GitHub repository
+      Write-Host "Fetching from GitHub..."
       git fetch origin
 
-      git config --global user.name 'Yogesh Karpe'
+      # Set up Git user information for commits
+      Write-Host "Setting up Git user configuration..."
+      git config --global user.name 'Yogesh'
 
-      git checkout master -ErrorAction SilentlyContinue
-      if ($?) {
-        git checkout -b master
+      # Ensure we’re on the correct branch (main), handle detached HEAD
+      Write-Host "Ensuring we're on the correct branch (main)..."
+      $branchExists = git branch --list main
+      if ($branchExists) {
+        Write-Host "Branch 'main' exists, checking it out."
+        git checkout main
+      } else {
+        Write-Host "Branch 'main' does not exist, creating it from the latest commit."
+        git checkout -b main
       }
 
+      # Stage, commit, and push changes if there are any
+      Write-Host "Staging changes..."
       git add .
       if (git diff --cached --quiet) {
         Write-Host 'No changes to commit.'
       } else {
+        Write-Host 'Committing changes...'
         git commit -m 'Automated push from Azure DevOps pipeline'
-        git push -u origin master
+        Write-Host 'Pushing to GitHub...'
+        git push -u origin main
       }
+
+      Write-Host "Git Push Process Completed."
   displayName: 'Push code to GitHub repository'
 
 - task: PublishBuildArtifacts@1
