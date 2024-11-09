@@ -45,62 +45,49 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      Write-Host "Starting Git Push Process"
-      
-      # Initialize Git if the repository hasn't been initialized yet
-      if (-not (Test-Path .git)) {
-        Write-Host "Initializing Git repository..."
-        git init
+      # Write your PowerShell commands here.
+      Write-Host ' - - - - - - - - - - - - - - - - - - - - - - - - -'
+      Write-Host ' reflect Azure Devops repo changes to GitHub repo'
+      Write-Host ' - - - - - - - - - - - - - - - - - - - - - - - - - '
+      $stageDir = '$(Build.SourcesDirectory)' | Split-Path
+      $githubDir = $stageDir +"\"+"gitHub"
+      $destination = $githubDir +"\"+"learnit-api.git"
+      #please provide your username
+      $alias = 'yogeshkarpe-dot:'+ "$(gitHubPat)"
+      #Please make sure, you remove https from azure-repo-clone-url
+      $sourceURL = 'https://$(azureDevopsPat)@yogeshkarpe1410@dev.azure.com/yogeshkarpe1410/learnit/_git/learnit-api'
+      #Please make sure, you remove https from github-repo-clone-url
+      $destURL = 'https://' + $alias + '@github.com/yogeshkarpe-dot/learnit-api.git'
+      #Check if the parent directory exists and delete
+      if((Test-Path -path $githubDir))
+      {
+        Remove-Item -Path $githubDir -Recurse -force
       }
-
-      # Remove the Azure DevOps remote (if any) and add the GitHub remote
-      Write-Host "Removing Azure DevOps remote (if it exists)..."
-      git remote remove origin
-      Write-Host "Adding GitHub remote..."
-      git remote add origin https://$(gitHubUsername):$(gitHubPat)@github.com/yogeshkarpe-dot/learnit-api.git
-
-      # Verify the remote URL
-      Write-Host "Verifying remote URL..."
-      git remote -v
-
-      # Fetch the latest state from the GitHub repository (if needed)
-      Write-Host "Fetching from GitHub..."
-      git fetch origin
-
-      # Set up Git user information for commits
-      Write-Host "Setting up Git user configuration..."
-      git config --global user.name 'Yogesh'
-
-      # Ensure we’re on the correct branch (main)
-      Write-Host "Ensuring we're on the correct branch (main)..."
-      $branchExists = git branch --list main
-      if ($branchExists) {
-        Write-Host "Branch 'main' exists, checking it out."
-        git checkout main
-      } else {
-        Write-Host "Branch 'main' does not exist, creating it from the latest commit."
-        git checkout -b main
+      if(!(Test-Path -path $githubDir))
+      {
+        New-Item -ItemType directory -Path $githubDir
+        Set-Location $githubDir
+        git clone --mirror $sourceURL
       }
-
-      # Check the status of the working directory (to make sure we have changes)
-      Write-Host "Checking git status..."
-      git status
-
-      # Stage, commit, and push changes if there are any
-      Write-Host "Staging changes..."
-      git add .
-      if (git diff --cached --quiet) {
-        Write-Host 'No changes to commit.'
-      } else {
-        Write-Host 'Committing changes...'
-        git commit -m 'Automated push from Azure DevOps pipeline'
-        Write-Host 'Pushing to GitHub...'
-        git push -u origin main
+      else
+      {
+        Write-Host "The given folder path $githubDir already exists";
       }
-
-      Write-Host "Git Push Process Completed."
-  displayName: 'Push code to GitHub repository'
-
+      Set-Location $destination
+      Write-Output '*****Git removing remote secondary****'
+      git remote rm secondary
+      Write-Output '*****Git remote add****'
+      git remote add --mirror=fetch secondary $destURL
+      Write-Output '*****Git fetch origin****'
+      git fetch $sourceURL
+      Write-Output '*****Git push secondary****'
+      git push secondary --all
+      Write-Output '**Azure Devops repo synced with Github repo**'
+      Set-Location $stageDir
+      if((Test-Path -path $githubDir))
+      {
+       Remove-Item -Path $githubDir -Recurse -force
+      }
 
 - task: PublishBuildArtifacts@1
   inputs:
