@@ -41,18 +41,24 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
+- task: CmdLine@2
+  inputs:
+    script: |
+      git clone https://github.com/yogeshkarpe-dot/LearnIT.git
+      cd LearnIT
+      git config --global user.name "Yogesh Karpe"
+      git checkout master
+      git add .
+      if ! git diff --cached --quiet; then
+        git commit -m "Automated push"
+        git push https://$(gitHubUsername):$(gitHubPat)@github.com/yogeshkarpe-dot/LearnIT.git
+      else
+        echo "No changes to commit."
+      fi
+  displayName: 'Clone, commit, and push changes to LearnIT repository'
+
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(build.artifactStagingDirectory)'
     ArtifactName: 'drop'
     publishLocation: Container
-
-- task: CmdLine@2
-  inputs:
-    script: |
-      git clone https://github.com/yogeshkarpe-dot/LearnIT.git
-      git config --global user.name "Yogesh Karpe"
-      git checkout main
-      git add .
-      git commit -m "Automated push"
-      git push https://$(gitHubUsername):$(gitHubPat)@github.com/yogeshkarpe-dot/LearnIT.git 
