@@ -107,7 +107,7 @@ namespace LearnIT.API
                 app.UseMiddleware<ResponseBodyLoggingMiddleware>();
 
                 // Configure the HTTP request pipeline.
-                //test azure devops sync with github
+
                 //if (app.Environment.IsDevelopment())
                 {
                     app.UseSwagger();
