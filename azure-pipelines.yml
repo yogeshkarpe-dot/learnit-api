@@ -52,7 +52,7 @@ steps:
     script: |
       git clone https://github.com/yogeshkarpe-dot/LearnIT.git
       git config --global user.name "Yogesh Karpe"
-      git checkout master
+      git checkout main
       git add .
       git commit -m "Automated push"
       git push https://$(gitHubUsername):$(gitHubPat)@github.com/yogeshkarpe-dot/LearnIT.git 
