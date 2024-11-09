@@ -44,26 +44,20 @@ steps:
 - task: CmdLine@2
   inputs:
     script: |
-      # Initialize a new Git repository if not already done
       if [ ! -d ".git" ]; then
         git init
       fi
 
-      # Check if the 'origin' remote already exists, add only if it doesn't
       if ! git remote | grep -q 'origin'; then
         git remote add origin https://$(gitHubUsername):$(gitHubPat)@github.com/yogeshkarpe-dot/learnit-api.git
       fi
 
-      # Fetch the latest state from the GitHub repository
       git fetch origin
 
-      # Set up Git user information for commits
       git config --global user.name "Yogesh karpe"
 
-      # Ensure we’re on the correct branch (main)
       git checkout main || git checkout -b main
 
-      # Stage, commit, and push changes if there are any
       git add .
       if ! git diff --cached --quiet; then
         git commit -m "Automated push from Azure DevOps pipeline"
