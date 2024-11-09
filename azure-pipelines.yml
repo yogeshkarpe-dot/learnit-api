@@ -58,9 +58,9 @@ steps:
 
       git config --global user.name 'Yogesh Karpe'
 
-      git checkout main -ErrorAction SilentlyContinue
+      git checkout master -ErrorAction SilentlyContinue
       if ($?) {
-        git checkout -b main
+        git checkout -b master
       }
 
       git add .
@@ -68,7 +68,7 @@ steps:
         Write-Host 'No changes to commit.'
       } else {
         git commit -m 'Automated push from Azure DevOps pipeline'
-        git push -u origin main
+        git push -u origin master
       }
   displayName: 'Push code to GitHub repository'
 
