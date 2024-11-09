@@ -62,6 +62,10 @@ steps:
         Write-Host "Remote 'origin' already exists."
       }
 
+      # Verify the remote URL
+      Write-Host "Verifying remote URL..."
+      git remote -v
+
       # Fetch the latest state from the GitHub repository
       Write-Host "Fetching from GitHub..."
       git fetch origin
@@ -81,6 +85,10 @@ steps:
         git checkout -b main
       }
 
+      # Check the status of the working directory
+      Write-Host "Checking git status..."
+      git status
+
       # Stage, commit, and push changes if there are any
       Write-Host "Staging changes..."
       git add .
@@ -95,6 +103,7 @@ steps:
 
       Write-Host "Git Push Process Completed."
   displayName: 'Push code to GitHub repository'
+
 
 - task: PublishBuildArtifacts@1
   inputs:
