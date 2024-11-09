@@ -107,7 +107,7 @@ namespace LearnIT.API
                 app.UseMiddleware<ResponseBodyLoggingMiddleware>();
 
                 // Configure the HTTP request pipeline.
-
+                // testing ci-cd pipeline
                 //if (app.Environment.IsDevelopment())
                 {
                     app.UseSwagger();
