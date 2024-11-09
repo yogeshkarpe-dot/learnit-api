@@ -44,27 +44,39 @@ steps:
 - task: CmdLine@2
   inputs:
     script: |
-      if [ ! -d ".git" ]; then
-        git init
-      fi
+      powershell -Command "
+        # Initialize a new Git repository if not already done
+        if (-not (Test-Path .git)) {
+          git init
+        }
 
-      if ! git remote | grep -q 'origin'; then
-        git remote add origin https://$(gitHubUsername):$(gitHubPat)@github.com/yogeshkarpe-dot/learnit-api.git
-      fi
+        # Check if the 'origin' remote already exists, add only if it doesn't
+        $remotes = git remote
+        if (-not $remotes.Contains('origin')) {
+          git remote add origin https://$(gitHubUsername):$(gitHubPat)@github.com/yogeshkarpe-dot/learnit-api.git
+        }
 
-      git fetch origin
+        # Fetch the latest state from the GitHub repository
+        git fetch origin
 
-      git config --global user.name "Yogesh karpe"
+        # Set up Git user information for commits
+        git config --global user.name 'Yogesh Karpe'
 
-      git checkout main || git checkout -b main
+        # Ensure we’re on the correct branch (main)
+        git checkout main -ErrorAction SilentlyContinue
+        if ($?) {
+          git checkout -b main
+        }
 
-      git add .
-      if ! git diff --cached --quiet; then
-        git commit -m "Automated push from Azure DevOps pipeline"
-        git push -u origin main
-      else
-        echo "No changes to commit."
-      fi
+        # Stage, commit, and push changes if there are any
+        git add .
+        if (git diff --cached --quiet) {
+          Write-Host 'No changes to commit.'
+        } else {
+          git commit -m 'Automated push from Azure DevOps pipeline'
+          git push -u origin main
+        }
+      "
   displayName: 'Clone, commit, and push changes to LearnIT repository'
 
 - task: PublishBuildArtifacts@1
